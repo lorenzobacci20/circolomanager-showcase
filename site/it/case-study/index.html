@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Progettare un calendario condiviso · Case study CircoloManager</title>
+  <meta name="description" content="Come Lorenzo Bacci ha progettato in CircoloManager le prenotazioni per circolo, i rinnovi delle tessere e la gestione delle richieste interrotte.">
+  <meta name="author" content="Lorenzo Bacci">
+  <meta name="theme-color" content="#004e9f">
+  <link rel="canonical" href="https://lorenzobacci20.github.io/circolomanager-showcase/it/case-study/">
+  <link rel="alternate" hreflang="en" href="https://lorenzobacci20.github.io/circolomanager-showcase/case-study/">
+  <link rel="alternate" hreflang="it" href="https://lorenzobacci20.github.io/circolomanager-showcase/it/case-study/">
+  <link rel="alternate" hreflang="x-default" href="https://lorenzobacci20.github.io/circolomanager-showcase/case-study/">
+  <link rel="icon" type="image/svg+xml" href="../../assets/mark.svg">
+  <link rel="stylesheet" href="../../assets/site.css">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="CircoloManager">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:url" content="https://lorenzobacci20.github.io/circolomanager-showcase/it/case-study/">
+  <meta property="og:title" content="Progettare un calendario condiviso · Case study CircoloManager">
+  <meta property="og:description" content="Come Lorenzo Bacci ha progettato in CircoloManager le prenotazioni per circolo, i rinnovi delle tessere e la gestione delle richieste interrotte.">
+  <meta property="og:image" content="https://lorenzobacci20.github.io/circolomanager-showcase/assets/social-it.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="Marchio di CircoloManager con la racchetta e il calendario campi del gestionale.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image:alt" content="Marchio di CircoloManager con la racchetta e il calendario campi del gestionale.">
+</head>
+<body>
+<a class="skip" href="#main">Vai al contenuto</a>
+<header>
+  <div class="top wrap">
+    <a class="brand" href="../../it/"><img src="../../assets/mark.svg" alt="" width="36" height="36">CircoloManager</a>
+    <div class="navs">
+      <nav aria-label="Navigazione principale">
+        <a href="../../it/#product">Prodotto</a>
+        <a href="../../it/#walkthrough">Demo</a>
+        <a href="../../it/case-study/" aria-current="page">Case study</a>
+        <a href="#contact">Contatti</a>
+      </nav>
+      <div class="locales" role="group" aria-label="Lingua"><a href="../../case-study/" lang="en" hreflang="en" aria-label="EN – English">EN</a><a href="../../it/case-study/" lang="it" hreflang="it" aria-label="IT – Italiano" aria-current="page" class="active">IT</a></div>
+    </div>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+  <div class="case-hero">
+    <div class="wrap">
+      <p class="kicker">Case study tecnico</p>
+      <h1>Progettare un calendario condiviso</h1>
+      <p class="lede">Un’ora di campo può servire a un socio, a una lezione o a un incontro di torneo. La gestione di queste richieste concorrenti ha orientato la progettazione di CircoloManager.</p>
+      <p class="byline">Lorenzo Bacci · Progetto software personale</p>
+    </div>
+  </div>
+  <div class="wrap case-body flow">
+    <aside class="contents">
+      <div>
+        <strong id="contents-heading">In questo case study</strong>
+        <nav aria-labelledby="contents-heading">
+          <a href="#domain">Dominio e contributo</a>
+          <a href="#architecture">Architettura applicativa</a>
+          <a href="#workflows">Due regole operative</a>
+          <a href="#quality">Test e iterazioni UX</a>
+          <a href="#lessons">Lezioni e maturità</a>
+        </nav>
+      </div>
+    </aside>
+    <article class="article" aria-label="Case study tecnico">
+        <section aria-labelledby="domain">
+          <h2 id="domain">Dominio e contributo</h2>
+          <p>Ho sviluppato CircoloManager come applicazione web proprietaria per il personale dei circoli sportivi. Il mio lavoro comprende il modello di dominio, l’applicazione ASP.NET Core, l’interfaccia operatore e i test che collegano questi elementi.</p>
+          <p>Il lavoro di segreteria unisce attività che su un foglio elettronico sembrano separate. Una lezione richiede un istruttore, un campo a un’ora precisa e un registro presenze. Il rinnovo di una tessera può generare un addebito che la segreteria deve distinguere dal denaro incassato.</p>
+        </section>
+        <section aria-labelledby="architecture">
+          <h2 id="architecture">Architettura applicativa</h2>
+          <p>L’applicazione usa ASP.NET Core MVC con rendering sul server, .NET 10, C#, ASP.NET Core Identity, Entity Framework Core e SQL Server. Tailwind CSS definisce l’interfaccia. JavaScript supporta operazioni mirate come il riscontro sul calendario e il salvataggio di una riga del registro.</p>
+          <p>Il livello web gestisce input e presentazione. I servizi governano le regole del circolo e i dati sono conservati in un database relazionale condiviso. Gioco libero, lezioni e incontri di torneo usano le stesse regole di occupazione, così ogni modalità di prenotazione mantiene la stessa definizione di campo disponibile.</p>
+          <figure class="arch">
+            <ol>
+              <li><strong>Interfaccia operatore</strong><span>La segreteria usa moduli, calendari e registri.</span></li>
+              <li><strong>Operazioni del circolo</strong><span>I servizi applicano permessi e regole del circolo selezionato.</span></li>
+              <li><strong>Dati relazionali</strong><span>SQL Server conserva prenotazioni, tessere e movimenti.</span></li>
+            </ol>
+            <figcaption>La richiesta passa dall’interfaccia alle regole del circolo e quindi ai dati persistenti.</figcaption>
+          </figure>
+          <h3>La stessa persona può avere ruoli diversi in più circoli</h3>
+          <p>L’identità dell’account e l’appartenenza al circolo sono distinte. Il circolo selezionato determina quali dati l’operatore può consultare e quali azioni può eseguire. Il segretario di un circolo può essere un semplice giocatore in un altro. I test browser cambiano circolo con lo stesso utente e verificano sia le azioni visibili sia l’accesso alle rispettive pagine.</p>
+        </section>
+        <section aria-labelledby="workflows">
+          <h2 id="workflows">Due regole operative</h2>
+          <h3>Prenotare una risorsa contesa</h3>
+          <p>Due operatori possono vedere lo stesso spazio libero prima della conferma. Il servizio verifica la disponibilità al momento della scrittura. Se una prenotazione precedente occupa l’orario, l’operatore può consultare il calendario aggiornato. Se si perde la risposta, l’interfaccia invita a verificare lo stato registrato sul server prima di un altro tentativo.</p>
+          <h3>Rinnovare una tessera</h3>
+          <p>L’anteprima calcola il nuovo periodo e la quota prima di qualsiasi modifica. La conferma crea la nuova tessera e, per una quota positiva, il relativo addebito. Il periodo precedente rimane nello storico. I test ripetono la conferma per rinnovi gratuiti e a pagamento e verificano anche l’assenza di incassi automatici.</p>
+        </section>
+        <section aria-labelledby="quality">
+          <h2 id="quality">Test e iterazioni UX</h2>
+          <p>I test di dominio esercitano regole come il punteggio e le date delle tessere. I test di integrazione verificano identità, appartenenza al circolo e persistenza. La verifica di release comprende build Release, controllo del modello dati, regressioni di interfaccia in Node, test xUnit e generazione dell’artefatto applicativo.</p>
+          <p>La verifica del 21 novembre sulla revisione applicativa usata per lo showcase ha superato 608 test xUnit e 43 test Node. I conteggi riguardano le suite del gestionale. Prove browser distinte, con dati sintetici, hanno esercitato conflitti di prenotazione, conferme ripetute, navigazione da tastiera e viewport ridotti.</p>
+          <p>Una prova ha evidenziato un problema nel salvataggio delle presenze. Ricaricare il registro dopo aver salvato una riga poteva compromettere le modifiche in un’altra. L’interfaccia aggiornata conserva la seconda bozza e riporta il focus sulla riga salvata, purché l’operatore non si sia già spostato altrove.</p>
+        </section>
+        <section aria-labelledby="lessons">
+          <h2 id="lessons">Lezioni e maturità</h2>
+          <p>Talvolta, dopo un clic, il sistema deve ancora capire che cosa sia successo. Se si perde la risposta a una prenotazione occorre controllare l’esito registrato. In un rinnovo il momento decisivo è prima della conferma, quando l’operatore può verificare le date e l’effetto economico.</p>
+          <p>CircoloManager è in fase pilota. L’installazione del 21 novembre 2026 ha superato i controlli di disponibilità e accesso amministrativo. Restano da verificare la costituzione del primo circolo e i flussi quotidiani su quell’installazione. Le prove locali utilizzano dati fittizi.</p>
+          <p>Pagamenti online e messaggistica esterna sono integrazioni opzionali. La loro attivazione sul servizio è da verificare. La fatturazione automatica del canone software del circolo è uno sviluppo futuro. Restano da completare anche le verifiche con dispositivi fisici e lettori di schermo.</p>
+        </section>
+    </article>
+  </div>
+  <section class="contact-area" id="contact" aria-labelledby="contact-heading">
+    <div class="contact wrap">
+      <div>
+        <h2 id="contact-heading">Richiedi una dimostrazione</h2>
+        <p>Scrivi a Lorenzo Bacci su LinkedIn per approfondire il prodotto o concordare una presentazione per il tuo circolo.</p>
+      </div>
+      <a class="btn" href="https://www.linkedin.com/in/lorenzobacci96/" referrerpolicy="no-referrer">Contatta Lorenzo su LinkedIn</a>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">
+    <span>CircoloManager · Software proprietario di Lorenzo Bacci</span>
+    <a href="../../it/">Panoramica del prodotto</a>
+  </div>
+</footer>
+
+</body>
+</html>

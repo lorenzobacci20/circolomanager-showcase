@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Engineering a shared court calendar · CircoloManager case study</title>
+  <meta name="description" content="How Lorenzo Bacci designed club-scoped bookings, traceable membership renewals and recovery from interrupted requests in CircoloManager.">
+  <meta name="author" content="Lorenzo Bacci">
+  <meta name="theme-color" content="#004e9f">
+  <link rel="canonical" href="https://lorenzobacci20.github.io/circolomanager-showcase/case-study/">
+  <link rel="alternate" hreflang="en" href="https://lorenzobacci20.github.io/circolomanager-showcase/case-study/">
+  <link rel="alternate" hreflang="it" href="https://lorenzobacci20.github.io/circolomanager-showcase/it/case-study/">
+  <link rel="alternate" hreflang="x-default" href="https://lorenzobacci20.github.io/circolomanager-showcase/case-study/">
+  <link rel="icon" type="image/svg+xml" href="../assets/mark.svg">
+  <link rel="stylesheet" href="../assets/site.css">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="CircoloManager">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:url" content="https://lorenzobacci20.github.io/circolomanager-showcase/case-study/">
+  <meta property="og:title" content="Engineering a shared court calendar · CircoloManager case study">
+  <meta property="og:description" content="How Lorenzo Bacci designed club-scoped bookings, traceable membership renewals and recovery from interrupted requests in CircoloManager.">
+  <meta property="og:image" content="https://lorenzobacci20.github.io/circolomanager-showcase/assets/social-en.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="CircoloManager tennis racket mark and a court calendar from the application.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image:alt" content="CircoloManager tennis racket mark and a court calendar from the application.">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header>
+  <div class="top wrap">
+    <a class="brand" href="../"><img src="../assets/mark.svg" alt="" width="36" height="36">CircoloManager</a>
+    <div class="navs">
+      <nav aria-label="Main navigation">
+        <a href="../#product">Product</a>
+        <a href="../#walkthrough">Walkthrough</a>
+        <a href="../case-study/" aria-current="page">Case study</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="locales" role="group" aria-label="Language"><a href="../case-study/" lang="en" hreflang="en" aria-label="EN – English" aria-current="page" class="active">EN</a><a href="../it/case-study/" lang="it" hreflang="it" aria-label="IT – Italiano">IT</a></div>
+    </div>
+  </div>
+</header>
+<main id="main" tabindex="-1">
+  <div class="case-hero">
+    <div class="wrap">
+      <p class="kicker">Technical case study</p>
+      <h1>Engineering a shared court calendar</h1>
+      <p class="lede">A court hour can be sold to a member, reserved for a lesson or assigned to a tournament. Designing for those competing claims shaped the rest of CircoloManager.</p>
+      <p class="byline">Lorenzo Bacci · Personal software project</p>
+    </div>
+  </div>
+  <div class="wrap case-body flow">
+    <aside class="contents">
+      <div>
+        <strong id="contents-heading">In this case study</strong>
+        <nav aria-labelledby="contents-heading">
+          <a href="#domain">Domain and contribution</a>
+          <a href="#architecture">Application architecture</a>
+          <a href="#workflows">Two operational rules</a>
+          <a href="#quality">Testing and UX iteration</a>
+          <a href="#lessons">Lessons and maturity</a>
+        </nav>
+      </div>
+    </aside>
+    <article class="article" aria-label="Technical case study">
+        <section aria-labelledby="domain">
+          <h2 id="domain">Domain and contribution</h2>
+          <p>I developed CircoloManager as a proprietary web application for sports club staff. My work spans the domain model, the ASP.NET Core application, its operator interface and the tests that tie those pieces together.</p>
+          <p>The front desk connects jobs that look separate on a spreadsheet. A lesson requires an instructor, a real court slot and an attendance register. A membership renewal can create a charge that the desk must distinguish from money actually received.</p>
+        </section>
+        <section aria-labelledby="architecture">
+          <h2 id="architecture">Application architecture</h2>
+          <p>The application uses server-rendered ASP.NET Core MVC on .NET 10, C#, ASP.NET Core Identity, Entity Framework Core and SQL Server. Tailwind CSS styles the interface. JavaScript supports focused tasks such as calendar feedback and saving a single attendance row.</p>
+          <p>The web layer handles input and presentation. Services own the club’s rules and persistence uses a shared relational database. The same scheduling rules apply across casual play, lessons and tournament matches, so a new way to book need not introduce a new definition of availability.</p>
+          <figure class="arch">
+            <ol>
+              <li><strong>Operator interface</strong><span>Club staff use forms, calendars and registers.</span></li>
+              <li><strong>Club operations</strong><span>Services apply the selected club’s permissions and domain rules.</span></li>
+              <li><strong>Relational records</strong><span>Bookings, memberships and ledger entries persist in SQL Server.</span></li>
+            </ol>
+            <figcaption>A request moves from the operator interface through the club’s rules to persistent records.</figcaption>
+          </figure>
+          <h3>One person can have different roles in different clubs</h3>
+          <p>Account identity and club membership are separate. The selected club determines which records an operator can retrieve and which actions are available. A staff member at one club may simply be a player at another. Browser tests switch that same person between clubs and check both the visible actions and access to their destinations.</p>
+        </section>
+        <section aria-labelledby="workflows">
+          <h2 id="workflows">Two operational rules</h2>
+          <h3>Booking a scarce resource</h3>
+          <p>Two operators can see the same free slot before either confirms. The service checks availability at the point of change. If another booking wins, the operator can consult the updated schedule. When a response goes missing, the interface asks the operator to check the server’s record before attempting the booking again.</p>
+          <h3>Renewing a membership</h3>
+          <p>The preview computes the next membership period and fee before making a change. Confirmation creates the new term and, for a positive fee, its charge. The previous term remains in the member’s history. Repeated confirmation was tested for both paid and free renewals, including a check that no cash receipt appeared.</p>
+        </section>
+        <section aria-labelledby="quality">
+          <h2 id="quality">Testing and UX iteration</h2>
+          <p>Domain tests exercise rules such as scoring and membership dates. Integration tests cover identity, club scope and persistence. The release checks include a Release build, the database-model check, Node interface regressions, xUnit tests and publication of an application artifact.</p>
+          <p>The 21 November verification on the application revision used for this showcase passed 608 xUnit tests and 43 Node tests. These counts cover the application test suites. Separate browser rehearsals on synthetic records exercised booking conflicts, duplicate submissions, keyboard navigation and small viewports.</p>
+          <p>One rehearsal changed how staff save lesson attendance. Reloading the register after saving a row could disturb edits in another. The revised interface keeps the second draft and returns keyboard focus to the saved row unless the operator has already moved elsewhere.</p>
+        </section>
+        <section aria-labelledby="lessons">
+          <h2 id="lessons">Lessons and maturity</h2>
+          <p>The important feedback after a click is sometimes a question the system still has to answer. A lost booking response calls for checking the recorded outcome. In a renewal, the decisive moment arrives earlier, when staff can see the dates and the financial effect before committing.</p>
+          <p>CircoloManager is at pilot maturity. The 21 November 2026 installation passed readiness and administrator sign-in checks. First-club onboarding and the day-to-day club workflows on that installation still await verification. Local testing uses fictional records.</p>
+          <p>Online payments and external messaging are optional integrations. Their live activation is unverified. Automated billing for the club’s software subscription remains future work. Physical-device and screen-reader acceptance also remain open.</p>
+        </section>
+    </article>
+  </div>
+  <section class="contact-area" id="contact" aria-labelledby="contact-heading">
+    <div class="contact wrap">
+      <div>
+        <h2 id="contact-heading">Request a demonstration</h2>
+        <p>Contact Lorenzo Bacci on LinkedIn to discuss the product or arrange a walkthrough for your club.</p>
+      </div>
+      <a class="btn" href="https://www.linkedin.com/in/lorenzobacci96/" referrerpolicy="no-referrer">Contact Lorenzo on LinkedIn</a>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">
+    <span>CircoloManager · Proprietary software by Lorenzo Bacci</span>
+    <a href="../">Product overview</a>
+  </div>
+</footer>
+
+</body>
+</html>
